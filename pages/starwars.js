@@ -1,50 +1,38 @@
-fetch('https://swapi.dev/api/people/')
-.then(resp => resp.json())
-.then(data => console.log(data))
+const results = document.querySelector('#results');
 
-// // Define the async function
-// async function getapi(url) {
-   
-//     // Storing response
-//     const response = await fetch(url);
-   
-//     // Storing data in form of JSON
-//     var data = await response.json();
-//     console.log(data);
-    
-//     show(data);
-// }
-// // Calling that async function
-// getapi('https://swapi.dev/api/people/');
- 
+async function asyncFetch(value){
+    const res = await fetch(`https://swapi.dev/api/${value}/`,{
 
-// // Function to define innerHTML for HTML table
-// function show(data) {
-//     let tab = 
-//         `<tr>
-//           <th>Name</th>
-//           <th>Height</th>
-//           <th>Mass</th>
-//           <th>Hair Color</th>
-//           <th>Skin Color</th>
-//           <th>Eye Color</th>
-//           <th>Birth Year</th>
-//           <th>Gender</th>
-//          </tr>`;
-   
-//     // Loop to access all rows 
-//     for (let r of data.people) {
-//         tab += `<tr> 
-//     <td>${r.name} </td>
-//     <td>${r.height}</td>
-//     <td>${r.mass}</td> 
-//     <td>${r.hair_color}</td>  
-//     <td>${r.skin_color}</td>           
-//     <td>${r.eye_color}</td>    
-//     <td>${r.birth_year}</td>    
-//     <td>${r.gender}</td>    
-// </tr>`;
-//     }
+method: "GET",
+        headers: {
+Origin:   "http://127.0.0.1:5500",         
+// "Access-Control-Allow-Origin": "*",
+           
+            
+        }
+    })
+    const data = await res.json();
+    displayResults(data, value);
+    console.log(data);
+}
 
+function displayResults(data, value){
 
-// }
+let output = "";
+console.log(data);
+if (value === 'people'){
+    data.results.forEach(item =>(
+        output += `
+        <div>
+        <h4>${item.name}</h4></div>
+        `
+
+    ))
+}
+results.innerHTML = output;
+}
+
+// event listener for buttons
+document.getElementById('buttons').addEventListener('click', e =>{
+    asyncFetch(e.target.textContent.trim().toLowerCase());
+})
